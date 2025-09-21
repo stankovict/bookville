@@ -117,27 +117,91 @@ window.deleteBook = function(knjigeId, bookId) {
 
 document.getElementById('editForm').addEventListener('submit', e => {
   e.preventDefault();
-  const id = document.getElementById('editId').value;
+
+  document.querySelectorAll('#editForm small.text-danger').forEach(s => s.textContent = '');
+
+  const id = document.getElementById('editId').value.trim();
+  const name = document.getElementById('editName').value.trim();
+  const address = document.getElementById('editAddress').value.trim();
+  const phone = document.getElementById('editPhone').value.trim();
+  const email = document.getElementById('editEmail').value.trim();
+  const year = document.getElementById('editYear').value.trim();
+  const logo = document.getElementById('editLogo').value.trim();
+
+
+  const addressPattern = /^[\p{L}\s]+\s\d+,\s[\p{L}\s]+,\s\d{5}$/u;
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const phonePattern = /^[0-9+\-/ ]+$/;
+  const urlPattern = /^(https?:\/\/[^\s]+)$/;
+
+  let valid = true;
+
+ 
+  if (!name) {
+    showError('editName', 'Назив је обавезан.');
+    valid = false;
+  }
+
+  if (!address || !addressPattern.test(address)) {
+    showError('editAddress', 'Адреса није у исправном формату (Улица и број, место, поштански број).');
+    valid = false;
+  }
+
+  if (!phone || !phonePattern.test(phone)) {
+    showError('editPhone', 'Телефон није исправан.');
+    valid = false;
+  }
+
+  if (!email || !emailPattern.test(email)) {
+    showError('editEmail', 'Емаил није исправан.');
+    valid = false;
+  }
+
+  if (!year || isNaN(year) || parseInt(year) < 1800 || parseInt(year) > new Date().getFullYear()) {
+    showError('editYear', 'Година мора бити број између 1800 и текуће године.');
+    valid = false;
+  }
+
+if (!logo) {
+  showError('editLogo', 'Лого је обавезан.');
+  valid = false;
+}
+  if (!valid) return;
+
+
   const updates = {
-    naziv: document.getElementById('editName').value,
-    adresa: document.getElementById('editAddress').value,
-    kontaktTelefon: document.getElementById('editPhone').value,
-    email: document.getElementById('editEmail').value,
-    godinaOsnivanja: document.getElementById('editYear').value,
-    logo: document.getElementById('editLogo').value
+    naziv: name,
+    adresa: address,
+    kontaktTelefon: phone,
+    email: email,
+    godinaOsnivanja: year,
+    logo: logo
   };
 
-const modalEl = document.getElementById('editModal');
-const editModal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-editModal.hide();
+  const modalEl = document.getElementById('editModal');
+  const editModal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+  editModal.hide();
+
   db.ref('knjizare/' + id).update(updates).then(() => {
-    alert('Измене су сачуване');
+    alert('Измене су сачуване успешно.');
     loadBookstores();
   }).catch(err => {
     console.error(err);
-    alert('Грешка при чувању.');
+    alert('Грешка при чувању измена.');
   });
 });
+
+function showError(inputId, message) {
+  const input = document.getElementById(inputId);
+  let small = input.nextElementSibling;
+  if (!small || !small.classList.contains('text-danger')) {
+    small = document.createElement('small');
+    small.className = 'text-danger';
+    input.parentNode.appendChild(small);
+  }
+  small.textContent = message;
+}
+
 
 document.getElementById('addBookBtn').addEventListener('click', () => {
   const id = document.getElementById('editId').value;
@@ -150,7 +214,11 @@ document.getElementById('addBookBtn').addEventListener('click', () => {
     cena: document.getElementById('newBookPrice').value,
     brojStrana: document.getElementById('newBookPages').value,
     opis: document.getElementById('newBookDesc').value,
-    slike: document.getElementById('newBookImages').value.split(',').map(s => s.trim())
+    slike: document.getElementById('newBookImages').value
+          .split(',')
+          .map(s => s.trim())
+          .filter(s => s.length > 0)
+
   };
 
   db.ref('knjizare/' + id).once('value').then(snap => {

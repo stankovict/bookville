@@ -78,29 +78,41 @@
           <form id="editForm">
             <input type="hidden" id="editId">
             <div class="mb-3">
-              <label>Назив књижаре</label>
-              <input type="text" id="editName" class="form-control" required>
-            </div>
-            <div class="mb-3">
-              <label>Адреса</label>
-              <input type="text" id="editAddress" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label>Телефон</label>
-              <input type="text" id="editPhone" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label>Емаил</label>
-              <input type="email" id="editEmail" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label>Година оснивања</label>
-              <input type="text" id="editYear" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label>URL слике књижаре</label>
-              <input type="text" id="editLogo" class="form-control">
-            </div>
+  <label>Назив књижаре</label>
+  <input type="text" id="editName" class="form-control" required>
+  <small class="text-danger" id="errorName"></small>
+</div>
+
+<div class="mb-3">
+  <label>Адреса</label>
+  <input type="text" id="editAddress" class="form-control">
+  <small class="text-danger" id="errorAddress"></small>
+</div>
+
+<div class="mb-3">
+  <label>Телефон</label>
+  <input type="text" id="editPhone" class="form-control">
+  <small class="text-danger" id="errorPhone"></small>
+</div>
+
+<div class="mb-3">
+  <label>Емаил</label>
+  <input type="email" id="editEmail" class="form-control">
+  <small class="text-danger" id="errorEmail"></small>
+</div>
+
+<div class="mb-3">
+  <label>Година оснивања</label>
+  <input type="text" id="editYear" class="form-control">
+  <small class="text-danger" id="errorYear"></small>
+</div>
+
+<div class="mb-3">
+  <label>URL слике књижаре</label>
+  <input type="text" id="editLogo" class="form-control">
+  <small class="text-danger" id="errorLogo"></small>
+</div>
+
 
             <h5>Књиге</h5>
             <div id="booksContainer" class="mb-3"></div>

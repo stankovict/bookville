@@ -76,25 +76,62 @@ function editUser(id) {
 
 document.getElementById('editForm').addEventListener('submit', e => {
   e.preventDefault();
+
+  document.getElementById('usernameError').textContent = '';
+  document.getElementById('emailError').textContent = '';
+
   const id = document.getElementById('editId').value;
-  const updates = {
-    korisnickoIme: document.getElementById('editUsername').value,
-    lozinka: document.getElementById('editPassword').value,
-    ime: document.getElementById('editFirstName').value,
-    prezime: document.getElementById('editLastName').value,
-    email: document.getElementById('editEmail').value,
-    datumRodjenja: document.getElementById('editDOB').value,
-    adresa: document.getElementById('editAddress').value,
-    telefon: document.getElementById('editPhone').value,
-    zanimanje: document.getElementById('editOccupation').value
-  };
-  db.ref('korisnici/' + id).update(updates).then(() => {
+  const newUsername = document.getElementById('editUsername').value.trim();
+  const newEmail = document.getElementById('editEmail').value.trim();
+
+  db.ref('korisnici').once('value').then(snapshot => {
+    let conflict = false;
+    snapshot.forEach(child => {
+      const user = child.val();
+      if (child.key !== id) {
+        if (user.korisnickoIme === newUsername) {
+          document.getElementById('usernameError').textContent = 'Ово корисничко име је већ заузето.';
+          conflict = true;
+        }
+        if (user.email === newEmail) {
+          document.getElementById('emailError').textContent = 'Овај емаил је већ заузет.';
+          conflict = true;
+        }
+      }
+    });
+
+    if (conflict) {
+      throw new Error('Duplicate data');
+    }
+
+    const updates = {
+      korisnickoIme: newUsername,
+      lozinka: document.getElementById('editPassword').value,
+      ime: document.getElementById('editFirstName').value,
+      prezime: document.getElementById('editLastName').value,
+      email: newEmail,
+      datumRodjenja: document.getElementById('editDOB').value,
+      adresa: document.getElementById('editAddress').value,
+      telefon: document.getElementById('editPhone').value,
+      zanimanje: document.getElementById('editOccupation').value
+    };
+
+    return db.ref('korisnici/' + id).update(updates);
+  })
+  .then(() => {
     alert('Измене су сачуване');
     const editModal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
     editModal.hide();
     loadUsers();
+  })
+  .catch(err => {
+    if (err.message !== 'Duplicate data') {
+      console.error(err);
+      alert('Грешка при чувању измена.');
+    }
   });
 });
+
 
 
 loadUsers();

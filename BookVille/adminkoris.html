@@ -74,9 +74,10 @@
             <input type="hidden" id="editId">
 
             <div class="mb-3">
-              <label>Корисничко име</label>
-              <input type="text" id="editUsername" class="form-control" required>
-            </div>
+  <label for="editUsername" class="form-label">Корисничко име</label>
+  <input type="text" class="form-control" id="editUsername" name="editUsername">
+  <small id="usernameError" class="text-danger"></small>
+</div>
             <div class="mb-3">
               <label>Лозинка</label>
               <input type="text" id="editPassword" class="form-control">
@@ -90,9 +91,10 @@
               <input type="text" id="editLastName" class="form-control">
             </div>
             <div class="mb-3">
-              <label>Емаил</label>
-              <input type="email" id="editEmail" class="form-control">
-            </div>
+  <label for="editEmail" class="form-label">Емаил</label>
+  <input type="email" class="form-control" id="editEmail" name="editEmail">
+  <small id="emailError" class="text-danger"></small>
+</div>
             <div class="mb-3">
               <label>Датум рођења</label>
               <input type="date" id="editDOB" class="form-control">

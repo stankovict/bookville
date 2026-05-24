@@ -1,6 +1,6 @@
 # BookVille
 
-BookVille je projekat studenta SV8\2024 iz predmeta Web dizajn.
+BookVille je projekat iz predmeta Web dizajn (FTN SIIT).
 
 
 Predstavlja sajt koji okuplja sve knjižare na jednom mestu.
